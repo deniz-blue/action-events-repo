@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import * as github from '@actions/github';
 import { EventData, EventDataSchema } from "@evnt/schema";
 import { globSync, readdirSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
@@ -22,9 +23,13 @@ export async function run(): Promise<void> {
 
 		await Promise.all(
 			files.map(async (dirent) => {
+				if (dirent.name.startsWith(".")) return;
 				const path = join(dirent.parentPath, dirent.name);
 				if (!dirent.isFile()) {
-					if (dirent.isDirectory()) writeFileSync(".ls", JSON.stringify(readdirSync(path), null, 2));
+					if (dirent.isDirectory()) {
+						writeFileSync(join(path, ".ls"), JSON.stringify(readdirSync(path).filter(x => !x.startsWith(".")), null, 2));
+						core.info(`Listed directory: ${path}`);
+					};
 					return;
 				};
 
@@ -55,6 +60,21 @@ export async function run(): Promise<void> {
 				}
 			})
 		);
+
+		const { owner, repo } = github.context.repo;
+		const repository = `${owner}/${repo}`;
+		const pagesUrl = `https://${owner}.github.io/${repo}`;
+
+		core.info(`Repository: ${repository}`);
+		core.info(`Pages URL: ${pagesUrl}`);
+
+		writeFileSync(".index.json", JSON.stringify({
+			repository,
+			events: Array.from(events.entries()).map(([path, data]) => ({
+				path,
+				url: `${pagesUrl}/events/${path}`,
+			})),
+		}, null, 2));
 
 		if (errorCount > 0) {
 			core.setFailed(`Event data validation failed for ${errorCount} event(s).`);
