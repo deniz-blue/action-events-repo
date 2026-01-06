@@ -1,18 +1,16 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
+name: Events Repository
+description: Manage events within a repository
+author: deniz.blue
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: heart
-  color: red
+  icon: calendar
+  color: yellow
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
+  events-path:
+    description: The root folder where events are stored
     required: true
-    default: '1000'
+    default: "./events"
 
 # Define your outputs here.
 outputs:
