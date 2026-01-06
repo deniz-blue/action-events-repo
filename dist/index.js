@@ -42898,6 +42898,8 @@ const checkEvents = async (dir) => {
             coreExports.error(`Unexpected error: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
+    if (errors.length > 0)
+        coreExports.setFailed(`Validation failed for ${errors.length} file(s)!`);
 };
 
 /**
