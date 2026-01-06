@@ -80,4 +80,6 @@ export const checkEvents = async (dir: string) => {
             core.error(`Unexpected error: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
+
+    if(errors.length > 0) core.setFailed(`Validation failed for ${errors.length} file(s)!`);
 };
