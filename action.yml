@@ -22,7 +22,6 @@ runs:
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
-        cache: 'npm'
     - shell: bash
       run: npx @evnt/dev static build
     - uses: actions/upload-pages-artifact@v3
