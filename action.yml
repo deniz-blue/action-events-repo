@@ -7,16 +7,24 @@ branding:
   color: yellow
 
 inputs:
+  node-version:
+    description: The Node.js version to use
+    required: false
+    default: '24'
   events-path:
     description: The root folder where events are stored
     required: true
     default: "./events"
 
-# Define your outputs here.
-outputs:
-  time:
-    description: Your output description here
-
 runs:
-  using: node24
-  main: dist/index.js
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+    - shell: bash
+      run: npx @evnt/dev static build
+    - uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./dist
