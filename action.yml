@@ -24,6 +24,6 @@ runs:
         node-version: ${{ inputs.node-version }}
     - shell: bash
       run: npx @evnt/dev@latest static build
-    - uses: actions/upload-pages-artifact@v3
+    - uses: actions/upload-pages-artifact@v4
       with:
         path: ./dist
